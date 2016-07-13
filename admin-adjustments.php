@@ -14,17 +14,16 @@ error_reporting(E_ALL);
 
 /* #0. TABLE OF CONTENTS */
 
-/*  1. HOOKS
- *  2. SHORTCODES     
- *  3. FILTERS
- *  4. EXTERNAL SCRIPTS
- *  5. ACTIONS
- *  6. HELPERS
- *  7. CUSTOM POST TYPES
- *  8. ADMIN PAGES
- *  9. SETTINGS
+/*  1. secure plugin
+ *  2. tts_add_hello_world_widget()     
+ *  3. tts_add_hello_world_2_widget()
+ *  4. tts_remove_dashboard_widget()
+ *  5. tts_add_google_analytics_link()
+ *  6. tts_move_dashboard_widget()
  */
 
+
+// #1 ************************************
 // secure plugin - make sure don't expose any info if called directly (taken from Akismet plugin)
 if( !function_exists( 'add_action') ) {
     echo 'Not Allowed';
@@ -37,7 +36,7 @@ if( !function_exists( 'add_action') ) {
  */
 
 
-//************************************
+// #2 ************************************
 // add Hello World widget to dashboard
 add_action( 'wp_dashboard_setup', 'tts_add_hello_world_widget' );
 
@@ -64,7 +63,7 @@ function tts_my_dashboard_widget_display2() {
 }
 
 
-//************************************
+// #3 ************************************
 // add Hello World, How Are You? widget to dashboard (right column)
 add_action( 'wp_dashboard_setup', 'tts_add_hello_world_2_widget' );
 
@@ -82,7 +81,52 @@ function tts_hello_world_2_display() {
     _e( 'Hello World, How Are You?' );
 }
 
-//***** could not get these two to work *****
+
+
+// #4 ************************************
+// remove WP News widget from dashboard
+function tts_remove_dashboard_widget() {
+    remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
+}
+
+add_action( 'wp_dashboard_setup', 'tts_remove_dashboard_widget' );
+
+
+// #5 ************************************
+// add link to Google Analytics in top admin bar
+// ref: https://codex.wordpress.org/Function_Reference/add_menu
+function tts_add_google_analytics_link() {
+    global $wp_admin_bar;
+    //var_dump($wp_admin_bar);
+    $wp_admin_bar->add_menu( array(
+        'id'    => 'google_analytics',
+        'title' => 'Google Analytics',
+        'href'  => 'http://google.com/analytics'
+    ) );
+    
+}
+
+add_action('wp_before_admin_bar_render', 'tts_add_google_analytics_link');
+
+
+
+// #6 ************************************
+// Move the 'Right Now' dashboard widget to the right side
+// code from WP Tuts Plus
+function tts_move_dashboard_widget() {
+    global $wp_meta_boxes;
+    $widget = $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'];
+    unset( $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'] );
+    $wp_meta_boxes['dashboard']['side']['core']['dashboard_right_now'] = $widget;
+}
+
+add_action( 'wp_dashboard_setup', 'tts_move_dashboard_widget' );
+
+
+
+// ************************************
+// ************************************
+//***** COULD NOT GET THESE TO WORK - WILL ASK ABOUT WHEN WE SPEAK *****
 // add recent drafts dashboard widget
 //function tts_add_recent_drafts_dash_widget() {
 //    add_meta_box(
@@ -105,44 +149,3 @@ function tts_hello_world_2_display() {
 //    );   
 //}
 //add_action( 'wp_dashboard_setup', 'tts_add_recent_drafts_dash_widget2' );
-
-
-//************************************
-// remove WP News widget from dashboard
-function tts_remove_dashboard_widget() {
-    remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
-}
-
-add_action( 'wp_dashboard_setup', 'tts_remove_dashboard_widget' );
-
-
-//************************************
-// add link to Google Analytics in top admin bar
-// ref: https://codex.wordpress.org/Function_Reference/add_menu
-function tts_add_google_analytics_link () {
-    global $wp_admin_bar;
-    //var_dump($wp_admin_bar);
-    $wp_admin_bar->add_menu( array(
-        'id'    => 'google_analytics',
-        'title' => 'Google Analytics',
-        'href'  => 'http://google.com/analytics'
-    ) );
-    
-}
-
-add_action('wp_before_admin_bar_render', 'tts_add_google_analytics_link');
-
-
-
-//************************************
-// Move the 'Right Now' dashboard widget to the right side
-// code from WP Tuts Plus
-function tts_move_dashboard_widget() {
-    global $wp_meta_boxes;
-    $widget = $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'];
-    unset( $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'] );
-    $wp_meta_boxes['dashboard']['side']['core']['dashboard_right_now'] = $widget;
-}
-
-add_action( 'wp_dashboard_setup', 'tts_move_dashboard_widget' );
-
