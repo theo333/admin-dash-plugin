@@ -36,6 +36,8 @@ if( !function_exists( 'add_action') ) {
  * defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
  */
 
+
+//************************************
 // add Hello World widget to dashboard
 add_action( 'wp_dashboard_setup', 'tts_add_hello_world_widget' );
 
@@ -62,6 +64,7 @@ function tts_my_dashboard_widget_display2() {
 }
 
 
+//************************************
 // add Hello World, How Are You? widget to dashboard (right column)
 add_action( 'wp_dashboard_setup', 'tts_add_hello_world_2_widget' );
 
@@ -104,7 +107,7 @@ function tts_hello_world_2_display() {
 //add_action( 'wp_dashboard_setup', 'tts_add_recent_drafts_dash_widget2' );
 
 
-
+//************************************
 // remove WP News widget from dashboard
 function tts_remove_dashboard_widget() {
     remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
@@ -113,6 +116,7 @@ function tts_remove_dashboard_widget() {
 add_action( 'wp_dashboard_setup', 'tts_remove_dashboard_widget' );
 
 
+//************************************
 // add link to Google Analytics in top admin bar
 // ref: https://codex.wordpress.org/Function_Reference/add_menu
 function tts_add_google_analytics_link () {
@@ -128,7 +132,9 @@ function tts_add_google_analytics_link () {
 
 add_action('wp_before_admin_bar_render', 'tts_add_google_analytics_link');
 
-//=================
+
+
+//************************************
 // Move the 'Right Now' dashboard widget to the right side
 // code from WP Tuts Plus
 function tts_move_dashboard_widget() {
