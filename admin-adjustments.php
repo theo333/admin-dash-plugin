@@ -12,12 +12,10 @@ error_reporting(E_ALL);
  * Text Domain: admin-adjustments
  */
 
-/* !0. TABLE OF CONTENTS */
+/* #0. TABLE OF CONTENTS */
 
 /*  1. HOOKS
- *      
- *  2. SHORTCODES
- *      
+ *  2. SHORTCODES     
  *  3. FILTERS
  *  4. EXTERNAL SCRIPTS
  *  5. ACTIONS
@@ -25,7 +23,6 @@ error_reporting(E_ALL);
  *  7. CUSTOM POST TYPES
  *  8. ADMIN PAGES
  *  9. SETTINGS
- *  
  */
 
 // secure plugin - make sure don't expose any info if called directly (taken from Akismet plugin)
@@ -39,8 +36,10 @@ if( !function_exists( 'add_action') ) {
  * defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
  */
 
-add_action( 'wp_dashboard_setup', 'tts_register_hello_world_widget' );
-function tts_register_hello_world_widget() {
+// add Hello World widget to dashboard
+add_action( 'wp_dashboard_setup', 'tts_add_hello_world_widget' );
+
+function tts_add_hello_world_widget() {
 	wp_add_dashboard_widget(
 		'hello_world_widget',
 		__( 'Hello World Widget ' ),
@@ -48,7 +47,7 @@ function tts_register_hello_world_widget() {
 	);
     wp_add_dashboard_widget(
 		'tts_my_dashboard_widget2',
-		__( 'My Dashboard Widget 2 '),
+		__( 'Another Dashboard Widget '),
 		'tts_my_dashboard_widget_display2'
 	);
 
@@ -63,6 +62,24 @@ function tts_my_dashboard_widget_display2() {
 }
 
 
+// add Hello World, How Are You? widget to dashboard (right column)
+add_action( 'wp_dashboard_setup', 'tts_add_hello_world_2_widget' );
+
+function tts_add_hello_world_2_widget() {
+    add_meta_box(
+        'hello-world-2-widget',
+        'Hello World 2',
+        'tts_hello_world_2_display',
+        'dashboard',
+        'side'
+    );
+}
+
+function tts_hello_world_2_display() {
+    _e( 'Hello World, How Are You?' );
+}
+
+//***** could not get these two to work *****
 // add recent drafts dashboard widget
 //function tts_add_recent_drafts_dash_widget() {
 //    add_meta_box(
@@ -92,7 +109,9 @@ function tts_my_dashboard_widget_display2() {
 function tts_remove_dashboard_widget() {
     remove_meta_box( 'dashboard_primary', 'dashboard', 'side' );
 }
+
 add_action( 'wp_dashboard_setup', 'tts_remove_dashboard_widget' );
+
 
 // add link to Google Analytics in top admin bar
 // ref: https://codex.wordpress.org/Function_Reference/add_menu
@@ -106,21 +125,18 @@ function tts_add_google_analytics_link () {
     ) );
     
 }
+
 add_action('wp_before_admin_bar_render', 'tts_add_google_analytics_link');
 
 //=================
-// Move the 'Right Now' dashboard widget to the right hand side
-function wptutsplus_move_dashboard_widget() {
-        global $wp_meta_boxes;
-        $widget = $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'];
-        unset( $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'] );
-        $wp_meta_boxes['dashboard']['side']['core']['dashboard_right_now'] = $widget;
+// Move the 'Right Now' dashboard widget to the right side
+// code from WP Tuts Plus
+function tts_move_dashboard_widget() {
+    global $wp_meta_boxes;
+    $widget = $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'];
+    unset( $wp_meta_boxes['dashboard']['normal']['core']['dashboard_right_now'] );
+    $wp_meta_boxes['dashboard']['side']['core']['dashboard_right_now'] = $widget;
 }
-add_action( 'wp_dashboard_setup', 'wptutsplus_move_dashboard_widget' );
 
-
-/* !1. HOOKS */
-
-
-/* !2. SHORTCODES */
+add_action( 'wp_dashboard_setup', 'tts_move_dashboard_widget' );
 
